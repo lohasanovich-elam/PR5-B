@@ -12,11 +12,22 @@ public class MoveToTargetAgent : Agent
     [SerializeField] private Color winColour = Color.green;
     [SerializeField] private Color loseColour = Color.red;
     [SerializeField] private Color idleColour = Color.grey;
+    [SerializeField] bool agentPlayerType = true;
+
+    [SerializeField] private WinChecker winCheckerScr;
 
     public override void OnEpisodeBegin()
     {
-        transform.localPosition = new Vector3(
-        Random.Range(-4f, 4f), 0.5f, Random.Range(-4f, 0f));
+        if (agentPlayerType)
+        {
+            transform.localPosition = new Vector3(
+            Random.Range(-14f, -14f), 0.5f, Random.Range(-4f, -6f));
+        }
+        else
+        {
+            transform.localPosition = new Vector3(
+            Random.Range(14f, 14f), 0.5f, Random.Range(4f, 6f));
+        }
         target.localPosition = new Vector3(
         Random.Range(-4f, 4f), 0.5f, Random.Range(1f, 4f));
     }
@@ -42,10 +53,20 @@ public class MoveToTargetAgent : Agent
         var continuous = actionsOut.ContinuousActions;
         var kb = Keyboard.current;
         if (kb == null) return;
-        continuous[0] = (kb.dKey.isPressed ? 1f : 0f)
-        - (kb.aKey.isPressed ? 1f : 0f);
-        continuous[1] = (kb.wKey.isPressed ? 1f : 0f)
-        - (kb.sKey.isPressed ? 1f : 0f);
+        if (agentPlayerType)
+        {
+            continuous[0] = (kb.dKey.isPressed ? 1f : 0f)
+            - (kb.aKey.isPressed ? 1f : 0f);
+            continuous[1] = (kb.wKey.isPressed ? 1f : 0f)
+            - (kb.sKey.isPressed ? 1f : 0f);
+        }
+        else
+        {
+            continuous[0] = (kb.downArrowKey.isPressed ? 1f : 0f)
+            - (kb.leftArrowKey.isPressed ? 1f : 0f);
+            continuous[1] = (kb.upArrowKey.isPressed ? 1f : 0f)
+            - (kb.rightArrowKey.isPressed ? 1f : 0f);
+        }
     }
 
     public override void Initialize() // runs once at startup
@@ -59,12 +80,16 @@ public class MoveToTargetAgent : Agent
         {
             SetReward(1f);
             floor.material.color = winColour;
+            agentPlayerType = !agentPlayerType;
+            winCheckerScr.winUpdate();
             EndEpisode();
         }
         else if (other.CompareTag("Wall"))
         {
             SetReward(-1f);
             floor.material.color = loseColour;
+            agentPlayerType = !agentPlayerType;
+            winCheckerScr.loseUpdate();
             EndEpisode();
         }
     }
