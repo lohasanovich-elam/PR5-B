@@ -10,8 +10,6 @@ public class MoveToTargetAgent : Agent
     [SerializeField] private Transform duckModel;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private Renderer floor;
-    [SerializeField] private Color winColour = Color.green;
-    [SerializeField] private Color loseColour = Color.red;
     [SerializeField] private Color idleColour = Color.grey;
     [SerializeField] bool agentPlayerType = true;
 
@@ -22,13 +20,13 @@ public class MoveToTargetAgent : Agent
         if (agentPlayerType)
         {
             transform.localPosition = new Vector3(
-            Random.Range(-14f, -14f), 0.5f, Random.Range(-4f, -6f));
+            Random.Range(-16f, -16f), 0.5f, Random.Range(-4f, -6f));
             duckModel.transform.eulerAngles = new Vector3(-60f,-215f,30f);
         }
         else
         {
             transform.localPosition = new Vector3(
-            Random.Range(14f, 14f), 0.5f, Random.Range(4f, 6f));
+            Random.Range(16f, 16f), 0.5f, Random.Range(4f, 6f));
             duckModel.transform.eulerAngles = new Vector3(-60f, 0f, 0f);
         }
         target.localPosition = new Vector3(
@@ -82,7 +80,6 @@ public class MoveToTargetAgent : Agent
         if (other.CompareTag("Target"))
         {
             SetReward(1f);
-            floor.material.color = winColour;
             agentPlayerType = !agentPlayerType;
             winCheckerScr.winUpdate();
             EndEpisode();
@@ -90,7 +87,6 @@ public class MoveToTargetAgent : Agent
         else if (other.CompareTag("Wall"))
         {
             SetReward(-1f);
-            floor.material.color = loseColour;
             agentPlayerType = !agentPlayerType;
             winCheckerScr.loseUpdate();
             EndEpisode();
