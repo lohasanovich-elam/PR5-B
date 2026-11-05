@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class MoveToTargetAgent : Agent
 {
     [SerializeField] private Transform target;
+    [SerializeField] private Transform duckModel;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private Renderer floor;
     [SerializeField] private Color winColour = Color.green;
@@ -22,11 +23,13 @@ public class MoveToTargetAgent : Agent
         {
             transform.localPosition = new Vector3(
             Random.Range(-14f, -14f), 0.5f, Random.Range(-4f, -6f));
+            duckModel.transform.eulerAngles = new Vector3(-60f,-215f,30f);
         }
         else
         {
             transform.localPosition = new Vector3(
             Random.Range(14f, 14f), 0.5f, Random.Range(4f, 6f));
+            duckModel.transform.eulerAngles = new Vector3(-60f, 0f, 0f);
         }
         target.localPosition = new Vector3(
         Random.Range(-4f, 4f), 0.5f, Random.Range(1f, 4f));
